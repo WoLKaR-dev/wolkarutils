@@ -74,7 +74,8 @@ abstract class RoundedButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(roundedPixels!),
       ),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           if (iconPosition == RoundedButtonIconPosition.left) iconDesign,
           Expanded(child: textDesign),
@@ -102,7 +103,8 @@ abstract class SquaredButton extends StatelessWidget {
   final String text;
   final Color? color;
   final IconData? upperIcon;
-  final dynamic onPressed;
+  final Function(BuildContext)? onLongTap;
+  final Function(BuildContext) onPressed;
   SquaredButton({
     super.key,
     required this.text,
@@ -110,25 +112,27 @@ abstract class SquaredButton extends StatelessWidget {
     this.upperIcon = Icons.arrow_outward,
     this.extraInfo,
     this.useBorder = true,
-    Color? color, 
-  }) : color = color ?? WolkarUtils.instance.colorPallete.surfaceContainer ;
+    this.onLongTap,
+    Color? color,
+  }) : color = color ?? WolkarUtils.instance.colorPallete.surfaceContainer;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onLongPress: () {
+        onLongTap?.call(context);
+      },
       onTap: () {
-        if (onPressed != null) {
-          onPressed(context);
-        }
+        onPressed.call(context);
       },
       child: Container(
         padding: EdgeInsets.all(15),
         decoration: BoxDecoration(
           border: useBorder! ? Border.all(color: Colors.black) : null,
           borderRadius: BorderRadius.circular(15),
-          color: color != WolkarUtils.instance.colorPallete.surfaceContainer 
+          color: color != WolkarUtils.instance.colorPallete.surfaceContainer
               ? color!.toPastel()
-              : WolkarUtils.instance.colorPallete.surfaceContainer ,
+              : WolkarUtils.instance.colorPallete.surfaceContainer,
         ),
         width: switch (WolkarUtils.instance.screenSize) {
           ScreenSize.small => 170,
@@ -277,21 +281,27 @@ class Input extends StatelessWidget {
   final bool obscure;
   final String hintText;
   final TextEditingController controller;
+  final bool? dialog;
+  final TextInputType? textInputType; 
   const Input({
     super.key,
     this.obscure = false,
     this.hintText = "",
     required this.controller,
     this.onChange,
+    this.dialog = false,
+    this.textInputType = TextInputType.text, 
   });
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: switch (WolkarUtils.instance.screenSize) {
-        ScreenSize.small => MediaQuery.sizeOf(context).width * 0.9,
-        ScreenSize.regular => MediaQuery.sizeOf(context).width * 0.9,
+        ScreenSize.small || ScreenSize.regular => MediaQuery.sizeOf(context).width * 0.9,
         ScreenSize.large => MediaQuery.sizeOf(context).width * 0.60,
-        ScreenSize.xlarge || ScreenSize.xxlarge => MediaQuery.sizeOf(context).width * 0.30,
+        ScreenSize.xlarge || ScreenSize.xxlarge =>
+          !dialog!
+              ? MediaQuery.sizeOf(context).width * 0.30
+              : MediaQuery.sizeOf(context).width * 0.15,
       },
       child: TextField(
         onChanged: (value) {
@@ -391,6 +401,54 @@ class AvailabilityIndicator extends StatelessWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// Botón que permite estar activo segun toggle
+///
+/// [active] define si está activo o no. [text] debe proveer el texto para mostrar en el
+/// botón y [onToggle] se retornará el inverso del valor actual del botón
+class ToggleableTextButton extends StatelessWidget {
+  final String baseText;
+  final String? unselectedText;
+  final String? selectedText;
+  final double? width;
+  final bool? circle;
+  final bool active;
+  final Function(bool) onToggle;
+
+  const ToggleableTextButton({
+    super.key,
+    required this.active,
+    required this.baseText,
+    required this.onToggle,
+    String? unselectedText,
+    String? selectedText,
+    this.circle = true,
+    this.width,
+  }) : selectedText = selectedText ?? baseText,
+       unselectedText = unselectedText ?? baseText;
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        onToggle(!active);
+      },
+      child: Container(
+        width: width,
+        padding: EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          border: Border.all(color: active ? Colors.black : _colorPallete.outline),
+          color: active ? _colorPallete.secondaryContainer : _colorPallete.surfaceContainer,
+          shape: circle! ? BoxShape.circle : BoxShape.rectangle,
+        ),
+        child: Center(
+          child: Text(
+            active ? selectedText! : unselectedText!,
+          ).h7(color: active ? _colorPallete.onSecondaryContainer : _colorPallete.onSurface),
+        ),
       ),
     );
   }
