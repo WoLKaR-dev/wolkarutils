@@ -282,7 +282,7 @@ class Input extends StatelessWidget {
   final String hintText;
   final TextEditingController controller;
   final bool? dialog;
-  final TextInputType? textInputType; 
+  final TextInputType? textInputType;
   const Input({
     super.key,
     this.obscure = false,
@@ -290,7 +290,7 @@ class Input extends StatelessWidget {
     required this.controller,
     this.onChange,
     this.dialog = false,
-    this.textInputType = TextInputType.text, 
+    this.textInputType = TextInputType.text,
   });
   @override
   Widget build(BuildContext context) {
@@ -453,3 +453,40 @@ class ToggleableTextButton extends StatelessWidget {
     );
   }
 }
+
+/// Botón que forma parte de un [BottomSheet]
+///
+/// [icon] como icono y [text] como texto del botón. [onTap] como callback a ejecutar al ser
+/// presionado.
+/// [color] como color opcional del icono y texto. [rounded] representa opcionalmente si redondear
+/// el tile.
+class BottomSheetListTile extends StatelessWidget {
+  final IconData icon;
+  final String text;
+  final VoidCallback onTap;
+  final Color? color;
+  final bool? rounded;
+  const BottomSheetListTile({
+    super.key,
+    required this.icon,
+    required this.text,
+    required this.onTap,
+    this.color,
+    this.rounded = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      title: Text(text).h6(),
+      iconColor: color,
+      textColor: color,
+      onTap: onTap,
+      leading: Icon(icon),
+      shape: rounded!
+          ? RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(360))
+          : null,
+    );
+  }
+}
+
