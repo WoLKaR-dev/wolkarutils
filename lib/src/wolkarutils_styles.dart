@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:wolkarutils/wolkarutils.dart';
 
@@ -203,15 +204,15 @@ class Background extends StatelessWidget {
   }
 }
 
-/// Pantalls deslizables de la app
-class Scroll extends StatelessWidget {
+/// Pantallas deslizables de la app
+class Scroll extends StatefulWidget {
   final Axis scrollDirection;
   final List<Widget> children;
   final EdgeInsets? padding;
   final CrossAxisAlignment crossAxisAlignment;
   final double spacing;
   final bool lockScroll;
-  final bool scrollConfiguration;
+  final bool draggable;
   const Scroll({
     super.key,
     required this.children,
@@ -220,22 +221,64 @@ class Scroll extends StatelessWidget {
     this.crossAxisAlignment = CrossAxisAlignment.center,
     this.scrollDirection = Axis.vertical,
     this.lockScroll = false,
-    this.scrollConfiguration = false,
+    this.draggable = false,
   });
+
+  @override
+  State<Scroll> createState() => _ScrollState();
+}
+
+class _ScrollState extends State<Scroll> {
+  final ScrollController scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     //ATOMS Scroll principal
-    final scroll = SingleChildScrollView(
-      physics: lockScroll ? NeverScrollableScrollPhysics() : null,
-      scrollDirection: scrollDirection,
-      padding: padding,
-      child: scrollDirection == Axis.vertical
-          ? Column(spacing: spacing, crossAxisAlignment: crossAxisAlignment, children: children)
-          : Row(spacing: spacing, crossAxisAlignment: crossAxisAlignment, children: children),
+    Widget scroll = SingleChildScrollView(
+      controller: scrollController,
+      physics: widget.lockScroll ? NeverScrollableScrollPhysics() : null,
+      scrollDirection: widget.scrollDirection,
+      padding: widget.padding,
+      child: widget.scrollDirection == Axis.vertical
+          ? Column(
+              spacing: widget.spacing,
+              crossAxisAlignment: widget.crossAxisAlignment,
+              children: widget.children,
+            )
+          : Row(
+              spacing: widget.spacing,
+              crossAxisAlignment: widget.crossAxisAlignment,
+              children: widget.children,
+            ),
     );
 
+    //ATOMS Scroll con scroll horizontal
+    if (widget.scrollDirection == Axis.horizontal) {
+      scroll = Listener(
+        onPointerSignal: (signal) {
+          if (signal is PointerScrollEvent) {
+            final double delta = signal.scrollDelta.dy;
+            final double newOffset = scrollController.offset + delta;
+            if (scrollController.hasClients) {
+              scrollController.jumpTo(
+                newOffset.clamp(0.0, scrollController.position.maxScrollExtent),
+              );
+            }
+          }
+        },
+        child: scroll,
+      );
+    }
+
     //LAYOUT Definicion final
-    return scrollConfiguration
+    return widget.draggable
         ? ScrollConfiguration(
             behavior: ScrollBehavior().copyWith(
               dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch},
@@ -248,23 +291,23 @@ class Scroll extends StatelessWidget {
   Widget addChildren({List<Widget>? childrenToAdd = const []}) {
     //ATOMS Scroll
     final scroll = SingleChildScrollView(
-      scrollDirection: scrollDirection,
-      padding: padding,
-      child: scrollDirection == Axis.vertical
+      scrollDirection: widget.scrollDirection,
+      padding: widget.padding,
+      child: widget.scrollDirection == Axis.vertical
           ? Column(
-              spacing: spacing,
-              crossAxisAlignment: crossAxisAlignment,
-              children: [...children, ...childrenToAdd!],
+              spacing: widget.spacing,
+              crossAxisAlignment: widget.crossAxisAlignment,
+              children: [...widget.children, ...childrenToAdd!],
             )
           : Row(
-              spacing: spacing,
-              crossAxisAlignment: crossAxisAlignment,
-              children: [...children, ...childrenToAdd!],
+              spacing: widget.spacing,
+              crossAxisAlignment: widget.crossAxisAlignment,
+              children: [...widget.children, ...childrenToAdd!],
             ),
     );
 
     //LAYOUT Main Scroll
-    return scrollConfiguration
+    return widget.draggable
         ? ScrollConfiguration(
             behavior: ScrollBehavior().copyWith(
               dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.stylus},
@@ -489,4 +532,3 @@ class BottomSheetListTile extends StatelessWidget {
     );
   }
 }
-
