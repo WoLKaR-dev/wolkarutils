@@ -239,7 +239,6 @@ class _ScrollState extends State<Scroll> {
 
   @override
   Widget build(BuildContext context) {
-
     //ATOMS Scroll principal
     Widget scroll = SingleChildScrollView(
       controller: scrollController,
@@ -367,34 +366,47 @@ class Input extends StatelessWidget {
     );
   }
 
-  Widget simple({bool? limitedLines = true, int? lineLimit = 1}) {
+  Widget simple({bool? limitedLines = true, int? lineLimit = 1, bool? restricted = false}) {
     return Builder(
       builder: (context) {
         return Theme(
           data: Theme.of(
             context,
           ).copyWith(textSelectionTheme: TextSelectionThemeData(selectionColor: Colors.black12)),
-          child: TextField(
-            cursorColor: Colors.black12,
-            maxLines: limitedLines! ? lineLimit : null,
-            onChanged: (value) {
-              if (onChange != null) {
-                onChange(value);
-              }
-            },
-            controller: controller,
-            obscureText: obscure,
+          child: SizedBox(
+            width: restricted!
+                ? switch (WolkarUtils.instance.screenSize) {
+                    ScreenSize.small ||
+                    ScreenSize.regular => MediaQuery.sizeOf(context).width * 0.9,
+                    ScreenSize.large => MediaQuery.sizeOf(context).width * 0.60,
+                    ScreenSize.xlarge || ScreenSize.xxlarge =>
+                      !dialog!
+                          ? MediaQuery.sizeOf(context).width * 0.30
+                          : MediaQuery.sizeOf(context).width * 0.15,
+                  }
+                : null,
+            child: TextField(
+              cursorColor: Colors.black12,
+              maxLines: limitedLines! ? lineLimit : null,
+              onChanged: (value) {
+                if (onChange != null) {
+                  onChange(value);
+                }
+              },
+              controller: controller,
+              obscureText: obscure,
 
-            decoration: InputDecoration(
-              filled: true,
-              fillColor: Colors.black12,
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-                borderSide: BorderSide(color: _colorPallete.outline),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(5),
-                borderSide: BorderSide(color: _colorPallete.outline),
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.black12,
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  borderSide: BorderSide(color: _colorPallete.outline),
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(5),
+                  borderSide: BorderSide(color: _colorPallete.outline),
+                ),
               ),
             ),
           ),
