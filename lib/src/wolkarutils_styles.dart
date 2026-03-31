@@ -15,6 +15,7 @@ abstract class RoundedButton extends StatelessWidget {
   final EdgeInsets? padding;
   final RoundedButtonIconPosition? iconPosition;
   final double? roundedPixels;
+  final Widget? trailing;
 
   const RoundedButton({
     super.key,
@@ -25,6 +26,7 @@ abstract class RoundedButton extends StatelessWidget {
     this.padding = const EdgeInsets.all(15),
     this.iconPosition = RoundedButtonIconPosition.right,
     this.roundedPixels = 360,
+    this.trailing,
   });
 
   @override
@@ -54,16 +56,18 @@ abstract class RoundedButton extends StatelessWidget {
     );
 
     //ATOMS Diseño del icono
-    final iconDesign = Icon(
-      icon,
-      size: switch (WolkarUtils.instance.screenSize) {
-        ScreenSize.small => 25,
-        ScreenSize.regular => 27,
-        ScreenSize.large => 30,
-        ScreenSize.xlarge => 35,
-        ScreenSize.xxlarge => 35,
-      },
-    );
+    final buttonTrailing =
+        trailing ??
+        Icon(
+          icon,
+          size: switch (WolkarUtils.instance.screenSize) {
+            ScreenSize.small => 25,
+            ScreenSize.regular => 27,
+            ScreenSize.large => 30,
+            ScreenSize.xlarge => 35,
+            ScreenSize.xxlarge => 35,
+          },
+        );
 
     //ATOMS Diseño principal
     final mainDesign = Container(
@@ -78,9 +82,9 @@ abstract class RoundedButton extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if (iconPosition == RoundedButtonIconPosition.left) iconDesign,
+          if (iconPosition == RoundedButtonIconPosition.left) buttonTrailing,
           Expanded(child: textDesign),
-          if (iconPosition == RoundedButtonIconPosition.right) iconDesign,
+          if (iconPosition == RoundedButtonIconPosition.right) buttonTrailing,
         ],
       ),
     );
@@ -315,6 +319,14 @@ class _ScrollState extends State<Scroll> {
           )
         : scroll;
   }
+
+  /// Devuelve un Scroll adaptado SOLO para un [BottomSheet]
+  Widget bottomSheet() {
+    return Scroll(
+      padding: EdgeInsets.only(left: 15, right: 15, bottom: 50),
+      children: widget.children,
+    );
+  }
 }
 
 /// Input de textfield de la app
@@ -502,7 +514,7 @@ class ToggleableTextButton extends StatelessWidget {
         child: Center(
           child: Text(
             active ? selectedText! : unselectedText!,
-          ).h7(color: active ? _colorPallete.onSecondaryContainer : _colorPallete.onSurface),
+          ).p(color: active ? _colorPallete.onSecondaryContainer : _colorPallete.onSurface),
         ),
       ),
     );

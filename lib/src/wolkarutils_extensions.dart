@@ -8,10 +8,10 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
-        
+
         fontSize: switch (WolkarUtils.instance.screenSize) {
-          ScreenSize.small || ScreenSize.regular => 35,
-          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 40,
+          ScreenSize.small || ScreenSize.regular => 50,
+          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 55,
         },
       ),
     );
@@ -23,10 +23,10 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
-        
+
         fontSize: switch (WolkarUtils.instance.screenSize) {
-          ScreenSize.small || ScreenSize.regular => 32,
-          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 37,
+          ScreenSize.small || ScreenSize.regular => 45,
+          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 45,
         },
       ),
     );
@@ -38,10 +38,10 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
-        
+
         fontSize: switch (WolkarUtils.instance.screenSize) {
-          ScreenSize.small || ScreenSize.regular => 29,
-          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 34,
+          ScreenSize.small || ScreenSize.regular => 40,
+          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 35,
         },
       ),
     );
@@ -53,10 +53,10 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
-        
+
         fontSize: switch (WolkarUtils.instance.screenSize) {
-          ScreenSize.small || ScreenSize.regular => 26,
-          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 31,
+          ScreenSize.small || ScreenSize.regular => 35,
+          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 30,
         },
       ),
     );
@@ -68,10 +68,10 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
-        
+
         fontSize: switch (WolkarUtils.instance.screenSize) {
-          ScreenSize.small || ScreenSize.regular => 23,
-          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 28,
+          ScreenSize.small || ScreenSize.regular => 30,
+          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 27,
         },
       ),
     );
@@ -83,9 +83,9 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
-        
+
         fontSize: switch (WolkarUtils.instance.screenSize) {
-          ScreenSize.small || ScreenSize.regular => 20,
+          ScreenSize.small || ScreenSize.regular => 25,
           ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 25,
         },
         fontWeight: bold! ? FontWeight.w600 : FontWeight.w500,
@@ -93,17 +93,17 @@ extension Paragraphs on Text {
     );
   }
 
-  Widget h7({Color? color, bool? bold = false}) {
+  Widget p({Color? color, bool? bold = false}) {
     return Text(
       data!,
       overflow: overflow,
       style: TextStyle(
         color: color,
-        
+
         fontWeight: bold! ? FontWeight.w600 : FontWeight.w500,
         fontSize: switch (WolkarUtils.instance.screenSize) {
-          ScreenSize.small || ScreenSize.regular => 14,
-          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 17,
+          ScreenSize.small || ScreenSize.regular => 20,
+          ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 20,
         },
       ),
     );
@@ -148,6 +148,23 @@ extension Children on Column {
       mainAxisAlignment: mainAxisAlignment,
       spacing: spacing,
       children: [...children, ...childrenToAdd],
+    );
+  }
+}
+
+extension Constrained on AlertDialog {
+  Widget constrained(BuildContext context) {
+    return AlertDialog(
+      constraints: BoxConstraints(
+        maxWidth: switch (WolkarUtils.instance.screenSize) {
+          ScreenSize.small || ScreenSize.regular => double.infinity,
+          ScreenSize.large => MediaQuery.sizeOf(context).width * 0.60,
+          ScreenSize.xlarge || ScreenSize.xxlarge => MediaQuery.sizeOf(context).width * 0.30,
+        },
+      ),
+      title: title,
+      content: content,
+      actions: actions,
     );
   }
 }
