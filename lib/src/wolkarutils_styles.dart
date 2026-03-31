@@ -527,7 +527,7 @@ class BottomSheetListTile extends StatelessWidget {
     required this.text,
     required this.onTap,
     this.color,
-    this.rounded = false,
+    this.rounded = true,
   });
 
   @override
