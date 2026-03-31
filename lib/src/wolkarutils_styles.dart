@@ -358,6 +358,7 @@ class Input extends StatelessWidget {
               : MediaQuery.sizeOf(context).width * 0.15,
       },
       child: TextField(
+        keyboardType: textInputType,
         onChanged: (value) {
           if (onChange != null) {
             onChange(value);
