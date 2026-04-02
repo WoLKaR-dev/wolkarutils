@@ -228,6 +228,11 @@ class Scroll extends StatefulWidget {
     this.draggable = false,
   });
 
+  /// Devuelve un Scroll adaptado SOLO para un [BottomSheet]
+  Widget bottomSheet() {
+    return Scroll(padding: EdgeInsets.only(left: 15, right: 15, bottom: 50), children: children);
+  }
+
   @override
   State<Scroll> createState() => _ScrollState();
 }
@@ -318,14 +323,6 @@ class _ScrollState extends State<Scroll> {
             child: scroll,
           )
         : scroll;
-  }
-
-  /// Devuelve un Scroll adaptado SOLO para un [BottomSheet]
-  Widget bottomSheet() {
-    return Scroll(
-      padding: EdgeInsets.only(left: 15, right: 15, bottom: 50),
-      children: widget.children,
-    );
   }
 }
 
