@@ -132,6 +132,11 @@ abstract class DataServiceInterface {
 
   /// Returns if the path is selected
   bool get directorySelected => _path != null;
+
+  /// Updates service path
+  set path(String newPath) {
+    _path = newPath;
+  }
 }
 
 abstract class AppDataInterface {
