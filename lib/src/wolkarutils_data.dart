@@ -13,9 +13,9 @@ abstract class DataServiceInterface {
 
   Future<void> initWebDirectory();
 
-  Future<bool> writeWebFile();
+  Future<bool> writeWebFile(String fileOrKeyName, String content, String ext);
 
-  Future<String> readWebFile();
+  Future<String> readWebFile(String fileOrKeyName, String ext);
 
   // Already implemented methods
 
@@ -56,7 +56,7 @@ abstract class DataServiceInterface {
 
       // Saves for web devices
       if (WolkarUtils.instance.device == Device.web) {
-        final bool result = await writeWebFile();
+        final bool result = await writeWebFile(name, data, ext!);
         if (!result) throw Exception("🛑 Unable to save web data.");
         debugPrint('💾 Web data saved successfully');
         return true;
@@ -90,7 +90,7 @@ abstract class DataServiceInterface {
 
       // Reads for web devices
       if (WolkarUtils.instance.device == Device.web) {
-        final String result = await readWebFile();
+        final String result = await readWebFile(name, ext!);
         if (result.isEmpty) throw Exception("🛑 Unable to read web data.");
         debugPrint('💾 Web data readed successfully');
         return result;
