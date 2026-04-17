@@ -2,6 +2,7 @@ export 'src/wolkarutils_enums.dart';
 export 'src/wolkarutils_extensions.dart';
 export 'src/wolkarutils_styles.dart';
 export 'src/wolkarutils_code.dart';
+export 'src/wolkarutils_data.dart';
 
 import 'dart:io';
 import 'package:flutter/foundation.dart';
