@@ -11,30 +11,30 @@ abstract class DataServiceInterface {
 
   // Must be implemented
 
-  void initWebDirectory();
+  Future<void> initWebDirectory();
 
-  bool writeWebFile();
+  Future<bool> writeWebFile();
 
-  String readWebFile();
+  Future<String> readWebFile();
 
   // Already implemented methods
 
   /// Initializes directories
   ///
   /// [directoryName] is the name of the folder where the data must be saved
-  void initDirectories(String directoryName) {
+  Future<void> initDirectories(String directoryName) async {
     switch (WolkarUtils.instance.device) {
       case Device.web:
-        initWebDirectory();
+        await initWebDirectory();
         break;
       case Device.android:
-        _initAndroidDir();
+        await _initAndroidDir();
         break;
       case Device.linux:
-        _initDesktopDir(directoryName = directoryName);
+        await _initDesktopDir(directoryName = directoryName);
         break;
       case Device.windows:
-        _initDesktopDir(directoryName = directoryName);
+        await _initDesktopDir(directoryName = directoryName);
         break;
       default:
         break;
@@ -56,7 +56,7 @@ abstract class DataServiceInterface {
 
       // Saves for web devices
       if (WolkarUtils.instance.device == Device.web) {
-        final bool result = writeWebFile();
+        final bool result = await writeWebFile();
         if (!result) throw Exception("🛑 Unable to save web data.");
         debugPrint('💾 Web data saved successfully');
         return true;
@@ -90,7 +90,7 @@ abstract class DataServiceInterface {
 
       // Reads for web devices
       if (WolkarUtils.instance.device == Device.web) {
-        final String result = readWebFile();
+        final String result = await readWebFile();
         if (result.isEmpty) throw Exception("🛑 Unable to read web data.");
         debugPrint('💾 Web data readed successfully');
         return result;
@@ -112,7 +112,7 @@ abstract class DataServiceInterface {
   }
 
   /// Initializes android directory
-  void _initAndroidDir() async {
+  Future<void> _initAndroidDir() async {
     final uri = await getApplicationDocumentsDirectory();
     _path = uri.path;
   }
@@ -121,7 +121,7 @@ abstract class DataServiceInterface {
   ///
   /// Requires a [directoryName] that is the name of the folder
   /// where the data must be saved
-  void _initDesktopDir(String directoryName) async {
+  Future<void> _initDesktopDir(String directoryName) async {
     final uri = await getApplicationDocumentsDirectory();
     _path = Uri.parse("${uri.path}/$directoryName").path;
   }
