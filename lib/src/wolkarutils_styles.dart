@@ -233,6 +233,11 @@ class Scroll extends StatefulWidget {
     return Scroll(padding: EdgeInsets.only(left: 15, right: 15, bottom: 50), children: children);
   }
 
+  /// Adds more children to a scroll widget
+  Widget addChildren(List<Widget> newChildren) {
+    return Scroll(children: [...children, ...newChildren]);
+  }
+
   @override
   State<Scroll> createState() => _ScrollState();
 }
@@ -295,54 +300,31 @@ class _ScrollState extends State<Scroll> {
           )
         : scroll;
   }
-
-  Widget addChildren({List<Widget>? childrenToAdd = const []}) {
-    //ATOMS Scroll
-    final scroll = SingleChildScrollView(
-      scrollDirection: widget.scrollDirection,
-      padding: widget.padding,
-      child: widget.scrollDirection == Axis.vertical
-          ? Column(
-              spacing: widget.spacing,
-              crossAxisAlignment: widget.crossAxisAlignment,
-              children: [...widget.children, ...childrenToAdd!],
-            )
-          : Row(
-              spacing: widget.spacing,
-              crossAxisAlignment: widget.crossAxisAlignment,
-              children: [...widget.children, ...childrenToAdd!],
-            ),
-    );
-
-    //LAYOUT Main Scroll
-    return widget.draggable
-        ? ScrollConfiguration(
-            behavior: ScrollBehavior().copyWith(
-              dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.stylus},
-            ),
-            child: scroll,
-          )
-        : scroll;
-  }
 }
 
 /// Input de textfield de la app
 class Input extends StatelessWidget {
+  const Input({
+    super.key,
+    required this.controller,
+    this.onChange,
+    this.obscure = false,
+    this.hintText = "",
+    this.dialog = false,
+    this.textInputType = TextInputType.text,
+    this.centered = false,
+    this.initiallySelected = false,
+  });
+
   final dynamic onChange;
   final bool obscure;
   final String hintText;
   final TextEditingController controller;
   final bool? dialog;
   final TextInputType? textInputType;
-  const Input({
-    super.key,
-    this.obscure = false,
-    this.hintText = "",
-    required this.controller,
-    this.onChange,
-    this.dialog = false,
-    this.textInputType = TextInputType.text,
-  });
+  final bool initiallySelected;
+  final bool centered;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -355,6 +337,8 @@ class Input extends StatelessWidget {
               : MediaQuery.sizeOf(context).width * 0.15,
       },
       child: TextField(
+        selectAllOnFocus: initiallySelected,
+        textAlign: centered ? TextAlign.center : TextAlign.start,
         keyboardType: textInputType,
         onChanged: (value) {
           if (onChange != null) {
