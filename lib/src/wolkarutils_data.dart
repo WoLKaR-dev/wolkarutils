@@ -11,11 +11,11 @@ abstract class DataServiceInterface {
 
   // Must be implemented
 
-  void _initWebDirectory();
+  void initWebDirectory();
 
-  bool _writeWebFile();
+  bool writeWebFile();
 
-  String _readWebFile();
+  String readWebFile();
 
   // Already implemented methods
 
@@ -25,7 +25,7 @@ abstract class DataServiceInterface {
   void initDirectories(String directoryName) {
     switch (WolkarUtils.instance.device) {
       case Device.web:
-        _initWebDirectory();
+        initWebDirectory();
         break;
       case Device.android:
         _initAndroidDir();
@@ -56,7 +56,7 @@ abstract class DataServiceInterface {
 
       // Saves for web devices
       if (WolkarUtils.instance.device == Device.web) {
-        final bool result = _writeWebFile();
+        final bool result = writeWebFile();
         if (!result) throw Exception("🛑 Unable to save web data.");
         debugPrint('💾 Web data saved successfully');
         return true;
@@ -90,7 +90,7 @@ abstract class DataServiceInterface {
 
       // Reads for web devices
       if (WolkarUtils.instance.device == Device.web) {
-        final String result = _readWebFile();
+        final String result = readWebFile();
         if (result.isEmpty) throw Exception("🛑 Unable to read web data.");
         debugPrint('💾 Web data readed successfully');
         return result;
