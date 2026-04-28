@@ -153,10 +153,10 @@ abstract class AppDataInterface {
   //==============
 
   /// Loads user data, using readFile
-  bool loadData();
+  Future<bool> loadData();
 
   /// Saves user data, using saveFile
-  bool saveData();
+  Future<bool> saveData();
 
   //==============
   //============== Getters
