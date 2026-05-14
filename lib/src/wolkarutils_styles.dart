@@ -314,6 +314,8 @@ class Input extends StatelessWidget {
     this.textInputType = TextInputType.text,
     this.centered = false,
     this.initiallySelected = false,
+    this.onLeave,
+    this.onSubmitted
   });
 
   final dynamic onChange;
@@ -324,6 +326,8 @@ class Input extends StatelessWidget {
   final TextInputType? textInputType;
   final bool initiallySelected;
   final bool centered;
+  final Function(String)? onLeave;
+  final Function(String)? onSubmitted; 
 
   @override
   Widget build(BuildContext context) {
@@ -337,6 +341,10 @@ class Input extends StatelessWidget {
               : MediaQuery.sizeOf(context).width * 0.15,
       },
       child: TextField(
+        onTapOutside: (event) {
+          onLeave?.call(controller.text);
+        },
+        onSubmitted: onSubmitted ?? (value){},
         selectAllOnFocus: initiallySelected,
         textAlign: centered ? TextAlign.center : TextAlign.start,
         keyboardType: textInputType,
@@ -380,6 +388,7 @@ class Input extends StatelessWidget {
                   }
                 : null,
             child: TextField(
+              onSubmitted: onSubmitted ?? (value){},
               cursorColor: Colors.black12,
               maxLines: limitedLines! ? lineLimit : null,
               onChanged: (value) {
@@ -535,6 +544,26 @@ class BottomSheetListTile extends StatelessWidget {
       shape: rounded!
           ? RoundedRectangleBorder(borderRadius: BorderRadiusGeometry.circular(360))
           : null,
+    );
+  }
+}
+
+/// Restricts the horizontal size to make content legible
+class Legible extends StatelessWidget {
+  const Legible({super.key, required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: switch (WolkarUtils.instance.screenSize) {
+        ScreenSize.small || ScreenSize.regular => double.infinity,
+        ScreenSize.large => MediaQuery.sizeOf(context).width * 0.7,
+        ScreenSize.xlarge => MediaQuery.sizeOf(context).width * 0.4,
+        ScreenSize.xxlarge => MediaQuery.sizeOf(context).width * 0.3,
+      },
+      child: child,
     );
   }
 }

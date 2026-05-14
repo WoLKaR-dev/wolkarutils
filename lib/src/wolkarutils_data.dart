@@ -11,7 +11,7 @@ abstract class DataServiceInterface {
 
   // Must be implemented
 
-  Future<void> initWebDirectory();
+  Future<bool> initWebDirectory();
 
   Future<bool> writeWebFile(String fileOrKeyName, String content, String ext);
 
@@ -25,7 +25,10 @@ abstract class DataServiceInterface {
   Future<void> initDirectories(String directoryName) async {
     switch (WolkarUtils.instance.device) {
       case Device.web:
-        await initWebDirectory();
+        final result = await initWebDirectory();
+        if (result) {
+          _path = ""; 
+        }
         break;
       case Device.android:
         await _initAndroidDir();
