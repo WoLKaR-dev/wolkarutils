@@ -567,3 +567,97 @@ class Legible extends StatelessWidget {
     );
   }
 }
+
+//STYLE Carta grande inicio
+class HomeBigCard extends StatelessWidget {
+  final String image;
+  final String title;
+  final String description;
+  final dynamic onPressed;
+
+  const HomeBigCard(this.title, this.description, this.image, {super.key, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: GestureDetector(
+        onTap: onPressed ?? () {},
+        child: Container(
+          width: switch (WolkarUtils.instance.screenSize) {
+            ScreenSize.small|| ScreenSize.regular  => MediaQuery.sizeOf(context).width * 0.9,
+            ScreenSize.large => MediaQuery.sizeOf(context).width * 0.6,
+            ScreenSize.xxlarge|| ScreenSize.xlarge  => MediaQuery.sizeOf(context).width * 0.4,
+          },
+          decoration: BoxDecoration(
+            color: _colorPallete.surfaceContainer,
+            border: Border.all(color: _colorPallete.outline),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: EdgeInsets.all(10),
+          child: Column(
+            spacing: 10,
+            children: [
+              AspectRatio(
+                aspectRatio: 2,
+                child: ClipRRect(
+                  borderRadius: BorderRadiusGeometry.circular(20),
+                  child: Image.asset(image, fit: BoxFit.cover),
+                ),
+              ),
+
+              Text(title).h4(),
+              Text(description).h5(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+//STYLE Carta pequeña inicio
+class HomeSmallCard extends StatelessWidget {
+  final String description;
+  final dynamic onPressed;
+  final String? image;
+
+  const HomeSmallCard({super.key, required this.description, this.image, this.onPressed});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10),
+      child: GestureDetector(
+        onTap: onPressed ?? () {},
+        child: Container(
+          width: switch (WolkarUtils.instance.screenSize) {
+            ScreenSize.small || ScreenSize.regular => MediaQuery.sizeOf(context).width * 0.9,
+            ScreenSize.large => MediaQuery.sizeOf(context).width * 0.6,
+            ScreenSize.xxlarge|| ScreenSize.xlarge  => MediaQuery.sizeOf(context).width * 0.4,
+          },
+          decoration: BoxDecoration(
+            color: _colorPallete.surfaceContainer,
+            border: Border.all(color: _colorPallete.outline),
+            borderRadius: BorderRadius.circular(30),
+          ),
+          padding: EdgeInsets.all(10),
+          child: Row(
+            spacing: 10,
+            children: [
+              SizedBox.square(
+                dimension: 75,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20),
+                  child: Image.asset(image ?? "assets/icons/icon.png", fit: BoxFit.cover),
+                ),
+              ),
+              Expanded(child: Text(description).h5()),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+

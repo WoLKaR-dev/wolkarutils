@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wolkarutils/wolkarutils.dart';
 
 extension Paragraphs on Text {
-  Widget h1({Color? color, bool? bold}) {
+  Text h1({Color? color, bool? bold}) {
     return Text(
       data!,
       overflow: overflow,
@@ -17,7 +17,7 @@ extension Paragraphs on Text {
     );
   }
 
-  Widget h2({Color? color, bool? bold}) {
+  Text h2({Color? color, bool? bold}) {
     return Text(
       data!,
       overflow: overflow,
@@ -32,7 +32,7 @@ extension Paragraphs on Text {
     );
   }
 
-  Widget h3({Color? color, bool? bold}) {
+  Text h3({Color? color, bool? bold}) {
     return Text(
       data!,
       overflow: overflow,
@@ -47,7 +47,7 @@ extension Paragraphs on Text {
     );
   }
 
-  Widget h4({Color? color, bool? bold}) {
+  Text h4({Color? color, bool? bold}) {
     return Text(
       data!,
       overflow: overflow,
@@ -62,7 +62,7 @@ extension Paragraphs on Text {
     );
   }
 
-  Widget h5({Color? color, bool? bold}) {
+  Text h5({Color? color, bool? bold}) {
     return Text(
       data!,
       overflow: overflow,
@@ -77,7 +77,7 @@ extension Paragraphs on Text {
     );
   }
 
-  Widget h6({Color? color, bool? bold = false}) {
+  Text h6({Color? color, bool? bold = false}) {
     return Text(
       data!,
       overflow: overflow,
@@ -93,7 +93,7 @@ extension Paragraphs on Text {
     );
   }
 
-  Widget p({Color? color, bool? bold = false}) {
+  Text p({Color? color, bool? bold = false}) {
     return Text(
       data!,
       overflow: overflow,
