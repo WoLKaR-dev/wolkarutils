@@ -8,6 +8,7 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
+        fontWeight: bold == true ? FontWeight.w700 : null,
 
         fontSize: switch (WolkarUtils.instance.screenSize) {
           ScreenSize.small || ScreenSize.regular => 50,
@@ -23,7 +24,7 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
-
+        fontWeight: bold == true ? FontWeight.w700 : null,
         fontSize: switch (WolkarUtils.instance.screenSize) {
           ScreenSize.small || ScreenSize.regular => 45,
           ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 45,
@@ -38,7 +39,7 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
-
+        fontWeight: bold == true ? FontWeight.w700 : null,
         fontSize: switch (WolkarUtils.instance.screenSize) {
           ScreenSize.small || ScreenSize.regular => 40,
           ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 35,
@@ -53,7 +54,7 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
-
+        fontWeight: bold == true ? FontWeight.w600 : null,
         fontSize: switch (WolkarUtils.instance.screenSize) {
           ScreenSize.small || ScreenSize.regular => 35,
           ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 30,
@@ -68,6 +69,7 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
+        fontWeight: bold == true ? FontWeight.w600 : null,
 
         fontSize: switch (WolkarUtils.instance.screenSize) {
           ScreenSize.small || ScreenSize.regular => 30,
@@ -83,12 +85,12 @@ extension Paragraphs on Text {
       overflow: overflow,
       style: TextStyle(
         color: color,
+        fontWeight: bold == true ? FontWeight.w600 : null,
 
         fontSize: switch (WolkarUtils.instance.screenSize) {
           ScreenSize.small || ScreenSize.regular => 25,
           ScreenSize.large || ScreenSize.xlarge || ScreenSize.xxlarge => 25,
         },
-        fontWeight: bold! ? FontWeight.w600 : FontWeight.w500,
       ),
     );
   }

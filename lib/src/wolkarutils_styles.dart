@@ -79,6 +79,7 @@ abstract class RoundedButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(roundedPixels!),
       ),
       child: Row(
+        spacing: 10,
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -315,7 +316,7 @@ class Input extends StatelessWidget {
     this.centered = false,
     this.initiallySelected = false,
     this.onLeave,
-    this.onSubmitted
+    this.onSubmitted,
   });
 
   final dynamic onChange;
@@ -327,7 +328,7 @@ class Input extends StatelessWidget {
   final bool initiallySelected;
   final bool centered;
   final Function(String)? onLeave;
-  final Function(String)? onSubmitted; 
+  final Function(String)? onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -344,7 +345,7 @@ class Input extends StatelessWidget {
         onTapOutside: (event) {
           onLeave?.call(controller.text);
         },
-        onSubmitted: onSubmitted ?? (value){},
+        onSubmitted: onSubmitted ?? (value) {},
         selectAllOnFocus: initiallySelected,
         textAlign: centered ? TextAlign.center : TextAlign.start,
         keyboardType: textInputType,
@@ -388,7 +389,7 @@ class Input extends StatelessWidget {
                   }
                 : null,
             child: TextField(
-              onSubmitted: onSubmitted ?? (value){},
+              onSubmitted: onSubmitted ?? (value) {},
               cursorColor: Colors.black12,
               maxLines: limitedLines! ? lineLimit : null,
               onChanged: (value) {
@@ -574,8 +575,18 @@ class HomeBigCard extends StatelessWidget {
   final String title;
   final String description;
   final dynamic onPressed;
+  final LinearGradient? gradient;
+  final BoxFit? fit;
 
-  const HomeBigCard(this.title, this.description, this.image, {super.key, this.onPressed});
+  const HomeBigCard(
+    this.title,
+    this.description,
+    this.image, {
+    super.key,
+    this.onPressed,
+    this.gradient,
+    this.fit,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -585,9 +596,9 @@ class HomeBigCard extends StatelessWidget {
         onTap: onPressed ?? () {},
         child: Container(
           width: switch (WolkarUtils.instance.screenSize) {
-            ScreenSize.small|| ScreenSize.regular  => MediaQuery.sizeOf(context).width * 0.9,
+            ScreenSize.small || ScreenSize.regular => MediaQuery.sizeOf(context).width * 0.9,
             ScreenSize.large => MediaQuery.sizeOf(context).width * 0.6,
-            ScreenSize.xxlarge|| ScreenSize.xlarge  => MediaQuery.sizeOf(context).width * 0.4,
+            ScreenSize.xxlarge || ScreenSize.xlarge => MediaQuery.sizeOf(context).width * 0.4,
           },
           decoration: BoxDecoration(
             color: _colorPallete.surfaceContainer,
@@ -602,11 +613,17 @@ class HomeBigCard extends StatelessWidget {
                 aspectRatio: 2,
                 child: ClipRRect(
                   borderRadius: BorderRadiusGeometry.circular(20),
-                  child: Image.asset(image, fit: BoxFit.cover),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: gradient,
+                      color: gradient != null ? null : _colorPallete.surfaceContainer,
+                    ),
+                    child: Image.asset(image, fit: fit ?? BoxFit.cover),
+                  ),
                 ),
               ),
 
-              Text(title).h4(),
+              Text(title).h4(bold: true),
               Text(description).h5(),
             ],
           ),
@@ -621,8 +638,15 @@ class HomeSmallCard extends StatelessWidget {
   final String description;
   final dynamic onPressed;
   final String? image;
+  final LinearGradient? gradient;
 
-  const HomeSmallCard({super.key, required this.description, this.image, this.onPressed});
+  const HomeSmallCard({
+    super.key,
+    required this.description,
+    this.image,
+    this.onPressed,
+    this.gradient,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -634,7 +658,7 @@ class HomeSmallCard extends StatelessWidget {
           width: switch (WolkarUtils.instance.screenSize) {
             ScreenSize.small || ScreenSize.regular => MediaQuery.sizeOf(context).width * 0.9,
             ScreenSize.large => MediaQuery.sizeOf(context).width * 0.6,
-            ScreenSize.xxlarge|| ScreenSize.xlarge  => MediaQuery.sizeOf(context).width * 0.4,
+            ScreenSize.xxlarge || ScreenSize.xlarge => MediaQuery.sizeOf(context).width * 0.4,
           },
           decoration: BoxDecoration(
             color: _colorPallete.surfaceContainer,
@@ -649,7 +673,13 @@ class HomeSmallCard extends StatelessWidget {
                 dimension: 75,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20),
-                  child: Image.asset(image ?? "assets/icons/icon.png", fit: BoxFit.cover),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      gradient: gradient,
+                      color: gradient != null ? null : _colorPallete.surfaceContainer,
+                    ),
+                    child: Image.asset(image ?? "assets/icons/icon.png", fit: BoxFit.cover),
+                  ),
                 ),
               ),
               Expanded(child: Text(description).h5()),
@@ -661,3 +691,157 @@ class HomeSmallCard extends StatelessWidget {
   }
 }
 
+/// Dialogo de confirmación de eliminación
+///
+/// Ejemplo de implementación:
+/// ```dart
+/// () async {
+///   final result = await showDialog(DeleteDialog());
+///   if (result) {
+///     //gestionar eliminación
+///   }
+/// }
+/// ```
+///
+/// Retorna `true` si se ha confirmado la eliminación o `false` si no.
+class DeleteDialog extends StatelessWidget {
+  final String title;
+  final String content;
+  final String delete;
+  final String cancel;
+
+  const DeleteDialog({
+    super.key,
+    this.title = "Confirmar eliminación",
+    this.content = "¿Seguro que quieres eliminar el contenido? Esta acción no es reversible",
+    this.delete = "Eliminar",
+    this.cancel = "Cancelar",
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: Text(title),
+      content: Scroll(children: [Text(content).p()]),
+      actions: [
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pop(context, false);
+          },
+          label: Text(cancel),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: WolkarUtils.instance.colorPallete.primary,
+            foregroundColor: WolkarUtils.instance.colorPallete.onPrimary,
+          ),
+          icon: Icon(Icons.close),
+        ),
+        ElevatedButton.icon(
+          onPressed: () {
+            Navigator.pop(context, true);
+          },
+          label: Text(delete),
+          icon: Icon(Icons.delete_forever),
+        ),
+      ],
+    ).constrained(context);
+  }
+}
+
+/// Dialogo de renombrado
+///
+/// [title] como el titulo, [content] como el contenido antes del input,
+/// [rename] como botón de aceptado, [cancel] como cancelación. [availableText] como
+/// texto que se muestra en el chip si aceptado, [notAvailableText] como texto de chip
+/// en rechazo. [chipFunction] como función que debe retornar `true` o `false` para
+/// determinar el valor del chip, y que se ejecuta en cada cambio.
+///
+/// Ejemplo de implementacion:
+/// ```dart
+///   () async {
+///     final chosenName = await showDialog(RenameDialog());
+///     if (isAvailable(chosenName)){
+///       // Gestionar resultado
+///     }
+///   }
+/// ```
+///
+/// Retorna `false` si se cancela. Retorna cualquier [String] si se ha metido un valor válido.
+class RenameDialog extends StatefulWidget {
+  const RenameDialog({
+    super.key,
+    this.title = "Renombrar",
+    this.content = "Elige un nuevo nombre para tu elemento: ",
+    this.rename = "Renombrar",
+    this.cancel = "Cancelar",
+    this.availableText = "Nombre Disponible",
+    this.notAvailableText = "Nombre no Disponible",
+    required this.chipFunction,
+  });
+
+  final String title;
+  final String content;
+  final String rename;
+  final String cancel;
+  final String availableText;
+  final String notAvailableText;
+  final bool Function(String) chipFunction;
+
+  @override
+  State<RenameDialog> createState() => _RenameDialogState();
+}
+
+class _RenameDialogState extends State<RenameDialog> {
+  //STATE Comenzar con false por defecto
+  bool available = false;
+
+  //FORM Input controller
+  final TextEditingController textController = TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return AlertDialog(
+          title: Text(widget.title),
+          content: Scroll(
+            children: [
+              Text(widget.content).p(),
+              Input(
+                controller: textController,
+                dialog: true,
+                onChange: (newValue) {
+                  final result = widget.chipFunction(newValue);
+                  setState(() {
+                    available = result;
+                  });
+                },
+              ),
+              AvailabilityIndicator(available: available),
+            ],
+          ),
+          actions: [
+            ElevatedButton.icon(
+              onPressed: () {
+                Navigator.pop(context, false);
+              },
+              label: Text(widget.cancel),
+              icon: Icon(Icons.close),
+            ),
+            ElevatedButton.icon(
+              onPressed: () {
+                if (available == false) return;
+                Navigator.pop(context, textController.text);
+              },
+              label: Text(widget.rename),
+              icon: Icon(Icons.edit),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: WolkarUtils.instance.colorPallete.primary,
+                foregroundColor: WolkarUtils.instance.colorPallete.onPrimary,
+              ),
+            ),
+          ],
+        ).constrained(context);
+      },
+    );
+  }
+}
