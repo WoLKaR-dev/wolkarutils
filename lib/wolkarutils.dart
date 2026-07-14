@@ -88,13 +88,13 @@ class WolkarUtils {
   /// [context] de tipo [BuildContext] para poder leer los tamaños
   void _initScreenSize(BuildContext context) {
     double width = MediaQuery.sizeOf(context).width;
-    if (width <= 320) {
+    if (width < 320) {
       _screenSize = ScreenSize.small;
-    } else if (width <= 425) {
+    } else if (width < 425) {
       _screenSize = ScreenSize.regular;
-    } else if (width <= 768) {
+    } else if (width < 768) {
       _screenSize = ScreenSize.large;
-    } else if (width <= 1024) {
+    } else if (width < 1024) {
       _screenSize = ScreenSize.xlarge;
     } else {
       _screenSize = ScreenSize.xxlarge;

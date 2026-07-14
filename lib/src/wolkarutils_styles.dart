@@ -166,7 +166,13 @@ abstract class SquaredButton extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   //SECTION Nombre
-                  Text(text).h4(),
+                  if ([
+                    ScreenSize.small,
+                    ScreenSize.regular,
+                  ].contains(WolkarUtils.instance.screenSize))
+                    Text(text).h6()
+                  else
+                    Text(text).h4(),
 
                   //SECTION Apartado de tiempo
                   extraInfo ?? SizedBox(),
