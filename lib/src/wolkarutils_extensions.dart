@@ -170,3 +170,11 @@ extension Constrained on AlertDialog {
     );
   }
 }
+
+extension TrimmedText on TextEditingController {
+  /// Gets the corresponding text on Controller, but already trimmed.
+  String get trimmedText {
+    final finalText = text.trim();
+    return finalText; 
+  }
+}
