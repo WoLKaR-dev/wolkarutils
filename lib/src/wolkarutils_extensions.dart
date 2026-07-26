@@ -171,10 +171,24 @@ extension Constrained on AlertDialog {
   }
 }
 
-extension TrimmedText on TextEditingController {
+extension TextUtils on TextEditingController {
   /// Gets the corresponding text on Controller, but already trimmed.
   String get trimmedText {
     final finalText = text.trim();
-    return finalText; 
+    return finalText;
+  }
+
+  /// Transforms and returns the trimmed text into a int if possible or `0` if not.
+  int get intValue {
+    final text = this.text.trim();
+    final int endValue = int.tryParse(text) ?? 0;
+    return endValue;
+  }
+
+  /// Transforms and returns the trimmed text into a double if possible or `0.0` if not.
+  double get doubleValue {
+    final text = this.text.trim();
+    final double endValue = double.tryParse(text) ?? 0.0;
+    return endValue;
   }
 }
