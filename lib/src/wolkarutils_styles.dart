@@ -810,6 +810,7 @@ class _RenameDialogState extends State<RenameDialog> {
         return AlertDialog(
           title: Text(widget.title),
           content: Scroll(
+            spacing: 5,
             children: [
               Text(widget.content).p(),
               Input(
@@ -822,7 +823,11 @@ class _RenameDialogState extends State<RenameDialog> {
                   });
                 },
               ),
-              AvailabilityIndicator(available: available),
+              AvailabilityIndicator(
+                available: available,
+                availableText: widget.availableText,
+                unavailableText: widget.notAvailableText,
+              ),
             ],
           ),
           actions: [
