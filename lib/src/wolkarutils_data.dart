@@ -67,7 +67,7 @@ abstract class DataServiceInterface {
 
       // Saves for android, linux and windows
       if ([Device.android, Device.linux, Device.windows].contains(WolkarUtils.instance.device)) {
-        File file = await File("${_path!}/$name/$ext").create(recursive: true);
+        File file = await File("${_path!}/$name.$ext").create(recursive: true);
         await file.writeAsString(data, flush: true);
         debugPrint('💾 Data saved successfully');
         return true;
@@ -101,7 +101,7 @@ abstract class DataServiceInterface {
 
       // Reads for android, linux and windows
       if ([Device.android, Device.linux, Device.windows].contains(WolkarUtils.instance.device)) {
-        File file = await File("${_path!}/$name/$ext").create(recursive: true);
+        File file = await File("${_path!}/$name.$ext").create(recursive: true);
         final String content = await file.readAsString();
         debugPrint('💾 Data read successfully');
         return content;
