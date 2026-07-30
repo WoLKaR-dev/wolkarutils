@@ -1,6 +1,4 @@
 import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:wolkarutils/wolkarutils.dart';
 
@@ -27,7 +25,7 @@ abstract class DataServiceInterface {
       case Device.web:
         final result = await initWebDirectory();
         if (result) {
-          _path = ""; 
+          _path = "";
         }
         break;
       case Device.android:
@@ -42,7 +40,7 @@ abstract class DataServiceInterface {
       default:
         break;
     }
-    debugPrint('📁 Init directories triggered: $_path');
+    DebugService().addMessage('📁 Init directories triggered: $_path', DebugMessageType.success);
   }
 
   /// Writes a file
@@ -61,7 +59,10 @@ abstract class DataServiceInterface {
       if (WolkarUtils.instance.device == Device.web) {
         final bool result = await writeWebFile(name, data, ext!);
         if (!result) throw Exception("🛑 Unable to save web data.");
-        debugPrint('💾 Web data saved successfully');
+        DebugService().addMessage(
+          "[💾DataService] Web data saved successfully",
+          DebugMessageType.success,
+        );
         return true;
       }
 
@@ -69,13 +70,19 @@ abstract class DataServiceInterface {
       if ([Device.android, Device.linux, Device.windows].contains(WolkarUtils.instance.device)) {
         File file = await File("${_path!}/$name.$ext").create(recursive: true);
         await file.writeAsString(data, flush: true);
-        debugPrint('💾 Data saved successfully');
+        DebugService().addMessage(
+          "[💾DataService] Data saved successfully",
+          DebugMessageType.success,
+        );
         return true;
       }
 
       throw ("🛑 Current device did not match any of the available devices.");
     } catch (e) {
-      debugPrint('❌ An error occurred writing file: $e');
+      DebugService().addMessage(
+        "[💾DataService] An error occurred writing file: $e",
+        DebugMessageType.error,
+      );
       return false;
     }
   }
@@ -95,7 +102,10 @@ abstract class DataServiceInterface {
       if (WolkarUtils.instance.device == Device.web) {
         final String result = await readWebFile(name, ext!);
         if (result.isEmpty) throw Exception("🛑 Unable to read web data.");
-        debugPrint('💾 Web data readed successfully');
+        DebugService().addMessage(
+          "[💾DataService] Web data readed successfully",
+          DebugMessageType.success,
+        );
         return result;
       }
 
@@ -103,20 +113,27 @@ abstract class DataServiceInterface {
       if ([Device.android, Device.linux, Device.windows].contains(WolkarUtils.instance.device)) {
         File file = await File("${_path!}/$name.$ext").create(recursive: true);
         final String content = await file.readAsString();
-        debugPrint('💾 Data read successfully');
+        DebugService().addMessage(
+          "[💾DataService] Data read successfully",
+          DebugMessageType.success,
+        );
+
         return content;
       }
 
       throw ("🛑 Current device did not match any of the available devices.");
     } catch (e) {
-      debugPrint('❌ An error occurred reading file: $e');
+      DebugService().addMessage(
+        "[💾DataService] An error occurred reading file: $e",
+        DebugMessageType.error,
+      );
       return "";
     }
   }
 
   /// Initializes android directory
   Future<void> _initAndroidDir() async {
-    final uri = await getApplicationDocumentsDirectory();
+    final uri = await getApplicationSupportDirectory();
     _path = uri.path;
   }
 
