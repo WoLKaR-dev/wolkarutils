@@ -192,3 +192,14 @@ extension TextUtils on TextEditingController {
     return endValue;
   }
 }
+
+/// Allows offset to use json parsing 
+extension OffsetJSON on Offset {
+  /// Returns a json parsed data
+  Map<String, dynamic> get json => {"dx": dx, "dy": dy};
+
+  /// Loads the json parsed data
+  static Offset fromJSON(Map<String, dynamic> data) {
+    return Offset((data["dx"] as num).toDouble(), (data["dy"] as num).toDouble());
+  }
+}
