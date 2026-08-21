@@ -1,3 +1,19 @@
+// wolkarutils is a flutter utils package designed to speed app development.
+// Copyright (C) 2026  WoLKaR-dev
+//
+// This program is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Affero General Public License as published
+// by the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// This program is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU Affero General Public License for more details.
+//
+// You should have received a copy of the GNU Affero General Public License
+// along with this program. If not, see https://www.gnu.org/licenses/.
+
 import 'package:flutter/material.dart';
 import 'package:wolkarutils/wolkarutils.dart';
 
@@ -193,7 +209,7 @@ extension TextUtils on TextEditingController {
   }
 }
 
-/// Allows offset to use json parsing 
+/// Allows offset to use json parsing
 extension OffsetJSON on Offset {
   /// Returns a json parsed data
   Map<String, dynamic> get json => {"dx": dx, "dy": dy};
@@ -201,5 +217,24 @@ extension OffsetJSON on Offset {
   /// Loads the json parsed data
   static Offset fromJSON(Map<String, dynamic> data) {
     return Offset((data["dx"] as num).toDouble(), (data["dy"] as num).toDouble());
+  }
+}
+
+/// Allows TimeOfDay to export / load from json
+extension TimeOfDayJSON on TimeOfDay {
+  /// Returns a timeofday from json
+  static TimeOfDay fromJSON(Map<String, dynamic> data) {
+    return TimeOfDay(hour: data["hour"] ?? 0, minute: data["minute"] ?? 0);
+  }
+
+  /// Returns the JSON of a TimeOfDay
+  Map<String, dynamic> get json => {"hour": hour, "minute": minute};
+}
+
+/// Allows DateTime to build from TimeOfDay
+extension DateTimeFromTOD on DateTime {
+  /// Transfroms a TimeOfDay to DateTime
+  DateTime fromTimeOfDay(TimeOfDay timeOfDay) {
+    return DateTime(year, month, day, timeOfDay.hour, timeOfDay.minute); 
   }
 }
