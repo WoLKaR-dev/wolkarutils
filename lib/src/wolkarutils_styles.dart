@@ -32,11 +32,13 @@ abstract class RoundedButton extends StatelessWidget {
   final RoundedButtonIconPosition? iconPosition;
   final double? roundedPixels;
   final Widget? trailing;
+  final Function(BuildContext)? onLongPress;
 
   const RoundedButton({
     super.key,
     required this.text,
     required this.onTap,
+    this.onLongPress,
     this.bold = true,
     this.icon = Icons.arrow_forward_ios_rounded,
     this.padding = const EdgeInsets.all(15),
@@ -108,6 +110,11 @@ abstract class RoundedButton extends StatelessWidget {
 
     //LAYOUT Layout principal
     final mainLayout = GestureDetector(
+      onLongPress: onLongPress == null
+          ? null
+          : () {
+              onLongPress!(context);
+            },
       onTap: () {
         onTap(context);
       },
@@ -210,7 +217,7 @@ class Background extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: padding,
+      padding: padding ?? EdgeInsets.all(15),
       width: MediaQuery.sizeOf(context).width,
       height: MediaQuery.sizeOf(context).height,
       decoration: BoxDecoration(color: _colorPallete.surface),
@@ -222,7 +229,7 @@ class Background extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: double.infinity,
-      padding: padding,
+      padding: padding ?? EdgeInsets.all(15),
       decoration: BoxDecoration(color: _colorPallete.surface),
       child: SafeArea(
         child: Align(alignment: alignment!, child: child),

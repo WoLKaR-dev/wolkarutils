@@ -196,14 +196,17 @@ extension TextUtils on TextEditingController {
 
   /// Transforms and returns the trimmed text into a int if possible or `0` if not.
   int get intValue {
-    final text = this.text.trim();
-    final int endValue = int.tryParse(text) ?? 0;
+    String text = this.text.trim();
+    text = text.replaceAll(",", ".");
+    double doubleValue = double.tryParse(text) ?? 0.0;
+    int endValue = doubleValue.toInt();
     return endValue;
   }
 
   /// Transforms and returns the trimmed text into a double if possible or `0.0` if not.
   double get doubleValue {
-    final text = this.text.trim();
+    String text = this.text.trim();
+    text = text.replaceAll(",", ".");
     final double endValue = double.tryParse(text) ?? 0.0;
     return endValue;
   }
@@ -235,6 +238,6 @@ extension TimeOfDayJSON on TimeOfDay {
 extension DateTimeFromTOD on DateTime {
   /// Transfroms a TimeOfDay to DateTime
   DateTime fromTimeOfDay(TimeOfDay timeOfDay) {
-    return DateTime(year, month, day, timeOfDay.hour, timeOfDay.minute); 
+    return DateTime(year, month, day, timeOfDay.hour, timeOfDay.minute);
   }
 }
