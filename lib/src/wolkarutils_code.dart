@@ -15,6 +15,7 @@
 // along with this program. If not, see https://www.gnu.org/licenses/.
 
 import 'dart:math';
+import 'package:wolkarutils/src/wolkarutils_vars.dart';
 
 /// Genera un identificador de caracteres aleatorios
 ///
@@ -30,4 +31,41 @@ String generateId({int amount = 15}) {
     generatedId += selectedChar;
   }
   return generatedId;
+}
+
+/// Returns a human-readable id
+///
+/// [locale] as the locale code. If not available, default locale is "en".
+///
+/// Returns generated ID
+String generateHumanReadableId({String? locale = "en"}) {
+  String id = "";
+
+  for (int i = 0; i <= 2; i++) {
+    // get pool names
+    Map<String, List<String>> pool = (Map.from(switch (i) {
+      0 => adjectives,
+      1 => nouns,
+      2 => verbs,
+      _ => adjectives,
+    }));
+
+    // select values from local
+    List<String> names = (pool[(locale!.toLowerCase())] != null
+        ? pool[(locale.toLowerCase())]
+        : pool["en"])!;
+
+    // pick a random name
+    final pickedName = names[Random.secure().nextInt(names.length)];
+
+    // add to id
+    id = "$id$pickedName";
+
+    // add separator if i<2
+    if (i < 2) {
+      id = "$id-";
+    }
+  }
+
+  return id;
 }
