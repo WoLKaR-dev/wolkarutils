@@ -107,7 +107,7 @@ class WolkarUtils {
     double width = MediaQuery.sizeOf(context).width;
     if (width < 320) {
       _screenSize = ScreenSize.small;
-    } else if (width < 425) {
+    } else if (width <= 425) {
       _screenSize = ScreenSize.regular;
     } else if (width < 768) {
       _screenSize = ScreenSize.large;
