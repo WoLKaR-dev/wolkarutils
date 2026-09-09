@@ -180,7 +180,7 @@ abstract class SquaredButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(360),
                 ),
                 padding: EdgeInsets.all(5),
-                child: Icon(upperIcon),
+                child: Icon(upperIcon, color: Colors.black),
               ),
               Column(
                 spacing: 15,
@@ -193,9 +193,9 @@ abstract class SquaredButton extends StatelessWidget {
                     ScreenSize.small,
                     ScreenSize.regular,
                   ].contains(WolkarUtils.instance.screenSize))
-                    Text(text).h6()
+                    Text(text).h6(color: Colors.black)
                   else
-                    Text(text).h4(),
+                    Text(text).h4(color: Colors.black),
 
                   //SECTION Apartado de tiempo
                   extraInfo ?? SizedBox(),
@@ -213,14 +213,15 @@ abstract class SquaredButton extends StatelessWidget {
 class Background extends StatelessWidget {
   final EdgeInsets? padding;
   final Widget child;
-  const Background({super.key, this.padding, required this.child});
+  final Color? color;
+  const Background({super.key, this.padding, required this.child, this.color});
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: padding ?? EdgeInsets.all(15),
       width: MediaQuery.sizeOf(context).width,
       height: MediaQuery.sizeOf(context).height,
-      decoration: BoxDecoration(color: _colorPallete.surface),
+      decoration: BoxDecoration(color: color ?? _colorPallete.surface),
       child: SafeArea(child: child),
     );
   }
