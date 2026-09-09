@@ -134,7 +134,6 @@ abstract class SquaredButton extends StatelessWidget {
   final IconData? upperIcon;
   final Function(BuildContext)? onLongTap;
   final Function(BuildContext) onPressed;
-  final Color? topColor; 
   SquaredButton({
     super.key,
     required this.text,
@@ -144,10 +143,14 @@ abstract class SquaredButton extends StatelessWidget {
     this.useBorder = true,
     this.onLongTap,
     Color? color,
-  }) : color = color ?? WolkarUtils.instance.colorPallete.surfaceContainer, topColor = color!.computeLuminance() > 0.3 ? Colors.black : WolkarUtils.instance.colorPallete.onSurface;
+  }) : color = color ?? WolkarUtils.instance.colorPallete.surfaceContainer;
 
   @override
   Widget build(BuildContext context) {
+    final topColor = color!.computeLuminance() > 0.15
+        ? Colors.black
+        : WolkarUtils.instance.colorPallete.onSurface;
+
     return GestureDetector(
       onLongPress: () {
         onLongTap?.call(context);
@@ -181,7 +184,7 @@ abstract class SquaredButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(360),
                 ),
                 padding: EdgeInsets.all(5),
-                child: Icon(upperIcon, color:topColor),
+                child: Icon(upperIcon, color: topColor),
               ),
               Column(
                 spacing: 15,
@@ -196,7 +199,7 @@ abstract class SquaredButton extends StatelessWidget {
                   ].contains(WolkarUtils.instance.screenSize))
                     Text(text).h6(color: topColor)
                   else
-                    Text(text).h4(color:topColor),
+                    Text(text).h4(color: topColor),
 
                   //SECTION Apartado de tiempo
                   extraInfo ?? SizedBox(),
