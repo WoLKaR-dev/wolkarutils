@@ -218,15 +218,24 @@ class Background extends StatelessWidget {
   final EdgeInsets? padding;
   final Widget child;
   final Color? color;
-  const Background({super.key, this.padding, required this.child, this.color});
+  final bool? legible;
+  const Background({super.key, this.padding, required this.child, this.color, this.legible = true});
   @override
   Widget build(BuildContext context) {
+    //ATOMS Legible content
+    final content = legible!
+        ? Align(
+            alignment: AlignmentGeometry.topCenter,
+            child: Legible(child: child),
+          )
+        : child;
+
     return Container(
       padding: padding ?? EdgeInsets.all(15),
       width: MediaQuery.sizeOf(context).width,
       height: MediaQuery.sizeOf(context).height,
       decoration: BoxDecoration(color: color ?? _colorPallete.surface),
-      child: SafeArea(child: child),
+      child: SafeArea(child: content),
     );
   }
 
