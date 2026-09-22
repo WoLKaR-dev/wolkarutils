@@ -360,6 +360,7 @@ class Input extends StatelessWidget {
     this.initiallySelected = false,
     this.onLeave,
     this.onSubmitted,
+    this.focusNode,
   });
 
   final dynamic onChange;
@@ -372,6 +373,7 @@ class Input extends StatelessWidget {
   final bool centered;
   final Function(String)? onLeave;
   final Function(String)? onSubmitted;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -385,6 +387,7 @@ class Input extends StatelessWidget {
               : MediaQuery.sizeOf(context).width * 0.15,
       },
       child: TextField(
+        focusNode: focusNode,
         onTapOutside: (event) {
           onLeave?.call(controller.text);
         },
@@ -432,6 +435,7 @@ class Input extends StatelessWidget {
                   }
                 : null,
             child: TextField(
+              focusNode: focusNode,
               onSubmitted: onSubmitted ?? (value) {},
               cursorColor: Colors.black12,
               maxLines: limitedLines! ? lineLimit : null,
@@ -602,7 +606,7 @@ class Legible extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: switch (WolkarUtils.instance.screenSize) {
-        ScreenSize.small || ScreenSize.regular => double.infinity,
+        ScreenSize.small || ScreenSize.regular => MediaQuery.sizeOf(context).width,
         ScreenSize.large => MediaQuery.sizeOf(context).width * 0.7,
         ScreenSize.xlarge => MediaQuery.sizeOf(context).width * 0.4,
         ScreenSize.xxlarge => MediaQuery.sizeOf(context).width * 0.3,

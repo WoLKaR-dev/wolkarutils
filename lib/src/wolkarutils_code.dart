@@ -14,8 +14,11 @@
 // You should have received a copy of the GNU Affero General Public License
 // along with this program. If not, see https://www.gnu.org/licenses/.
 
+import 'dart:io';
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:wolkarutils/src/wolkarutils_vars.dart';
+import 'package:wolkarutils/wolkarutils.dart';
 
 /// Genera un identificador de caracteres aleatorios
 ///
@@ -68,4 +71,39 @@ String generateHumanReadableId({String? locale = "en"}) {
   }
 
   return id;
+}
+
+/// Checks if the user has internet connection
+///
+/// - [timeoutSeconds] as the limit seconds to check connection.
+///
+/// Returns `true` if user has connection or `false` otherwise.
+Future<bool> hasInternetConnection({int? timeoutSeconds = 5}) async {
+  try {
+    if (WolkarUtils.instance.device == Device.web) return true;
+
+    final result = await InternetAddress.lookup(
+      "google.com",
+    ).timeout(Duration(seconds: timeoutSeconds!));
+
+    return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+  } catch (e) {
+    DebugService().addMessage(
+      '[ wolkarutils_code.dart/hasInternetConnection] An error ocurred checking internet connection: $e',
+      DebugMessageType.error,
+    );
+    return false;
+  }
+}
+
+/// Returns legible dimensions for screen size.
+///
+/// - [context] as the BuildContext to get size.
+double getLegibleDimensions(BuildContext context) {
+  return switch (WolkarUtils.instance.screenSize) {
+    ScreenSize.small || ScreenSize.regular => MediaQuery.sizeOf(context).width,
+    ScreenSize.large => MediaQuery.sizeOf(context).width * 0.7,
+    ScreenSize.xlarge => MediaQuery.sizeOf(context).width * 0.4,
+    ScreenSize.xxlarge => MediaQuery.sizeOf(context).width * 0.3,
+  };
 }
