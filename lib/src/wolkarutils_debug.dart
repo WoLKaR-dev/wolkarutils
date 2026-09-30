@@ -15,8 +15,7 @@
 // along with this program. If not, see https://www.gnu.org/licenses/.
 
 import 'package:flutter/material.dart';
-import 'package:wolkarutils/src/wolkarutils_extensions.dart';
-import 'package:wolkarutils/src/wolkarutils_styles.dart';
+import 'package:wolkarutils/wolkarutils.dart';
 
 class DebugService {
   //==============
@@ -45,8 +44,9 @@ class DebugService {
   ///
   /// [message] is the content
   /// [type] is the message type
-  void addMessage(String message, DebugMessageType type) {
-    final debugMessage = DebugMessage(message, type);
+  /// - [stackTrace] is an optional strack trace for detailed debugging
+  void addMessage(String message, DebugMessageType type, {StackTrace? stackTrace}) {
+    final debugMessage = DebugMessage(message, type, trace: stackTrace);
     debugPrint(type == DebugMessageType.error ? " ❎ $message" : " ✅ $message");
     _messages.add(debugMessage);
   }
@@ -70,16 +70,27 @@ class DebugMessage {
   /// Mesage type
   final DebugMessageType type;
 
+  /// StaceTrack
+  final StackTrace? trace;
+
   /// Message constructor
-  DebugMessage(this.message, this.type);
+  DebugMessage(this.message, this.type, {this.trace});
 }
 
 /// Message enums
 enum DebugMessageType { error, success, warning }
 
 /// Shows all messages added to the log.
-class DebugServiceMessageLog extends StatelessWidget {
+class DebugServiceMessageLog extends StatefulWidget {
   const DebugServiceMessageLog({super.key});
+
+  @override
+  State<DebugServiceMessageLog> createState() => _DebugServiceMessageLogState();
+}
+
+class _DebugServiceMessageLogState extends State<DebugServiceMessageLog> {
+  //STATE Show StackTrace
+  bool showStackTrace = false;
 
   @override
   Widget build(BuildContext context) {
@@ -87,16 +98,46 @@ class DebugServiceMessageLog extends StatelessWidget {
       padding: EdgeInsets.all(15),
       child: Scroll(
         children: [
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: WolkarUtils.instance.colorPallete.outline),
+            ),
+            padding: EdgeInsets.all(10),
+            child: Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              runSpacing: 5,
+              spacing: 5,
+              children: [
+                Text('Show StackTrace:').p(),
+                Switch(
+                  value: showStackTrace,
+                  onChanged: (newValue) {
+                    setState(() {
+                      showStackTrace = newValue;
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
           ...List.generate(DebugService().messages.length, (index) {
             final message = DebugService().messages[index];
             return Padding(
               padding: const EdgeInsets.all(5),
-              child: Text(message.message).p(
-                color: switch (message.type) {
-                  DebugMessageType.success => Colors.green[700],
-                  DebugMessageType.warning => Colors.amber[800],
-                  DebugMessageType.error => Colors.red[700],
-                },
+              child: Column(
+                children: [
+                  Text(message.message).p(
+                    color: switch (message.type) {
+                      DebugMessageType.success => Colors.green[700],
+                      DebugMessageType.warning => Colors.amber[800],
+                      DebugMessageType.error => Colors.red[700],
+                    },
+                  ),
+                  if (showStackTrace && message.trace != null)
+                    Text('Trace: ${message.trace}').p(color: Colors.red[700]),
+                ],
               ),
             );
           }),
